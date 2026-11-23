@@ -1,7 +1,4 @@
-import logging
 from dataclasses import dataclass
-
-logger = logging.getLogger(__name__)
 
 
 @dataclass(frozen=True)
@@ -11,6 +8,14 @@ class Box:
     height: float
     length: float
     max_weight: float
+
+    @property
+    def size(self) -> tuple[float, float, float]:
+        return self.width, self.height, self.length
+
+    @property
+    def volume(self) -> float:
+        return self.width * self.height * self.length
 
 
 BOXES = [

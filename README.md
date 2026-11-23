@@ -1,7 +1,7 @@
 # Box Packing Service
 
 A FastAPI service that provides the configured shipping box catalogue.
-The box values are currently stored in code in `app/boxes.py`; they are not
+The box values are currently stored in code in `app/services/boxes.py`; they are not
 persisted in a database.
 
 ## Run locally
@@ -16,6 +16,44 @@ uvicorn app.main:app --reload
 Open `http://127.0.0.1:8000/docs` to explore and call the endpoint in Swagger UI.
 
 ## API
+
+### `POST /v1/packages/box-count`
+
+Provide a JSON array of packages. Each package must have a unique integer `id`
+and positive `width`, `height`, `length`, and `weight` values. Dimensions are
+checked in any orientation, and both box size and maximum weight are considered.
+
+Example request:
+
+```json
+[
+  {
+    "id": 123,
+    "width": 10,
+    "height": 10,
+    "length": 10,
+    "weight": 5
+  }
+]
+```
+
+Example response:
+
+```json
+{
+  "boxCount": 1,
+  "boxes": [
+    {
+      "type": "B",
+      "packageIds": [123],
+      "totalWeight": 5
+    }
+  ]
+}
+```
+
+Invalid package data, duplicate IDs, and packages that do not fit return a
+`422` error with a `code`, `message`, and `details` field.
 
 ### `GET /v1/get_boxes`
 
@@ -54,9 +92,14 @@ Example response:
 ```text
 app/
   __init__.py
-  boxes.py     In-code box catalogue
-  main.py      FastAPI application and routes
-  schemas.py   Box response model
+  errors.py    API error responses
+  main.py      API endpoints
+  schemas.py   Request and response models
+  services/
+    __init__.py
+    box_service.py  Box lookup and package packing
+    boxes.py        In-code box catalogue
+    packing.py      Package fitting and box assignment
 requirements.txt
 README.md
 ```
