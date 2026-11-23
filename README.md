@@ -1,8 +1,31 @@
-# Box Packing Service
+# Shipping Box Recommendation Service
 
-A FastAPI service that provides the configured shipping box catalogue.
-The box values are currently stored in code in `app/services/boxes.py`; they are not
-persisted in a database.
+## What this service does
+
+This service helps decide how many shipping boxes are needed for a set of
+packages. Provide each package's dimensions and weight; the service recommends
+boxes and shows which package IDs are assigned to each one.
+
+Packages can share a box when they fit within its available space and weight
+limit. Packages may be rotated to find a fit. If package information is invalid
+or a package cannot fit any available box, the service returns a clear error
+instead of a box recommendation.
+
+The service uses a fixed catalogue of three box types (A, B, and C). The
+catalogue is maintained in the application source code and is not stored in a
+database. The packing method is a practical estimate, not a guarantee of the
+mathematically smallest possible box count.
+
+## Available features
+
+- **Calculate boxes:** Submit packages and receive the recommended box count,
+  box types, package assignments, and weight totals.
+- **View box options:** Retrieve the dimensions and maximum weight for each
+  configured box.
+- **Review errors:** Invalid requests and packages that cannot be shipped
+  receive clear error responses.
+
+For technical details and instructions for running the service, see below.
 
 ## Run locally
 
