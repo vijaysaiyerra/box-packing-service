@@ -41,6 +41,13 @@ start it with `python -m uvicorn app.main:app --reload`.
 Set `DEBUG = True` in `app/main.py` to include full request and response payloads
 in the logs. Set it to `False` to show INFO logs only.
 
+Every request to a `/v1/` endpoint is also saved to
+`pass_fail_api_requests.xlsx` in the project root. The workbook has one
+`Requests` sheet and one row per request, including status, timing, and the full
+request and response bodies. Long payloads are split across columns on that
+same row when needed. Keep in mind that these bodies may contain data you do
+not want to share; the workbook is intended for local use.
+
 Open `http://127.0.0.1:8000/docs` to explore and call the endpoints in Swagger UI.
 
 Run the unit and API tests with:

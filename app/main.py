@@ -4,6 +4,7 @@ import logging
 
 from fastapi import FastAPI
 
+from .excel_logging import ExcelRequestLoggingMiddleware
 from .errors import register_error_handlers
 from .schemas import BoxInfo, PackageList, PackingResponse
 from .services.box_service import count_boxes, get_boxes as get_box_catalogue
@@ -15,6 +16,7 @@ logging.basicConfig(level=log_level, format="%(levelname)s: %(message)s")
 logging.getLogger().setLevel(log_level)
 logger = logging.getLogger(__name__)
 app = FastAPI(title="Box Packing Service")
+app.add_middleware(ExcelRequestLoggingMiddleware)
 register_error_handlers(app)
 
 
