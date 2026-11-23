@@ -40,6 +40,24 @@ def test_packing_logs_a_summary(client: TestClient, caplog) -> None:
     assert "Packing completed: packages=2 boxes=1" in caplog.text
 
 
+def test_full_payloads_are_logged_at_debug(client: TestClient, caplog) -> None:
+    """Keep package and response details out of INFO logs."""
+    with caplog.at_level(logging.INFO):
+        response = client.post(BOX_COUNT_URL, json=EXAMPLE)
+
+    assert response.status_code == 200
+    assert "Request payload:" not in caplog.text
+    assert "Response payload:" not in caplog.text
+
+    caplog.clear()
+    with caplog.at_level(logging.DEBUG):
+        response = client.post(BOX_COUNT_URL, json=EXAMPLE)
+
+    assert response.status_code == 200
+    assert "Request payload:" in caplog.text
+    assert "Response payload:" in caplog.text
+
+
 def test_multiple_boxes_return_all_package_ids(client: TestClient) -> None:
     """Return every package ID when separate boxes are required."""
     package = {"width": 300, "height": 400, "length": 300, "weight": 100}
@@ -195,7 +213,7 @@ def test_wrong_method_returns_standard_error(client: TestClient) -> None:
 
 def test_box_endpoint_returns_catalogue(client: TestClient) -> None:
     """Return all configured box types with their public field names."""
-    response = client.get("/v1/get_boxes")
+    response = client.get("/v1/boxes")
 
     assert response.status_code == 200
     boxes = response.json()

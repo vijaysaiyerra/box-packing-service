@@ -15,6 +15,8 @@ python -m uvicorn app.main:app --reload
 
 The source app does not need a separate build step. After installing dependencies,
 start it with `python -m uvicorn app.main:app --reload`.
+Set `DEBUG = True` in `app/main.py` to include full request and response payloads
+in the logs. Set it to `False` to show INFO logs only.
 
 Open `http://127.0.0.1:8000/docs` to explore and call the endpoints in Swagger UI.
 
@@ -66,7 +68,7 @@ Invalid package data, duplicate IDs, and packages that do not fit return a
 a consistent `404` error. Unexpected server errors return a generic `500`
 response without exposing internal details.
 
-### `GET /v1/get_boxes`
+### `GET /v1/boxes`
 
 Returns the available box types, including their dimensions and maximum weight.
 

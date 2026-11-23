@@ -36,7 +36,8 @@ def error_response(
 ) -> JSONResponse:
     """Build and log the standard JSON structure used for API errors."""
     content = {"error": {"code": code, "message": message, "details": details or []}}
-    logger.info("Response sent: status=%d body=%s", status, content)
+    logger.info("Response sent: status=%d code=%s", status, code)
+    logger.debug("Response payload: status=%d body=%s", status, content)
     return JSONResponse(
         status_code=status,
         content=content,
