@@ -1,1 +1,1 @@
-"""Box catalogue and packing business logic."""
+"""Box catalogue, packing algorithm, and packing service modules."""
