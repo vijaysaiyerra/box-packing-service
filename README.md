@@ -26,6 +26,18 @@ Run the unit and API tests with:
 python -m pytest
 ```
 
+## Run with Docker
+
+Requires Docker with Docker Compose. From the repository root, build the image
+and start the service with one command:
+
+```powershell
+docker compose up --build
+```
+
+Open `http://127.0.0.1:8000/docs` to use the API. Stop the service with `Ctrl+C`;
+run `docker compose down` to remove its container.
+
 ## API
 
 ### `POST /v1/packages/box-count`
@@ -133,5 +145,8 @@ tests/
   test_api.py       Endpoint and validation tests
   test_packing.py   Packing algorithm tests
 requirements.txt
+Dockerfile
+compose.yaml
+.dockerignore
 README.md
 ```
