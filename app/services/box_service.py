@@ -61,5 +61,5 @@ def count_boxes(packages: PackageList) -> PackingResponse:
         )
         for box in packed
     ]
-    logger.info("Packed %d packages into %d boxes", len(items), len(boxes))
+    logger.info("Packing completed: packages=%d boxes=%d", len(items), len(boxes))
     return PackingResponse(boxCount=len(boxes), boxes=boxes)

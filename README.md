@@ -10,10 +10,19 @@ Requires Python 3.12 or newer.
 
 ```powershell
 python -m pip install -r requirements.txt
-uvicorn app.main:app --reload
+python -m uvicorn app.main:app --reload
 ```
 
-Open `http://127.0.0.1:8000/docs` to explore and call the endpoint in Swagger UI.
+The source app does not need a separate build step. After installing dependencies,
+start it with `python -m uvicorn app.main:app --reload`.
+
+Open `http://127.0.0.1:8000/docs` to explore and call the endpoints in Swagger UI.
+
+Run the unit and API tests with:
+
+```powershell
+python -m pytest
+```
 
 ## API
 
@@ -53,7 +62,9 @@ Example response:
 ```
 
 Invalid package data, duplicate IDs, and packages that do not fit return a
-`422` error with a `code`, `message`, and `details` field.
+`422` error with a `code`, `message`, and `details` field. Unknown routes return
+a consistent `404` error. Unexpected server errors return a generic `500`
+response without exposing internal details.
 
 ### `GET /v1/get_boxes`
 
@@ -87,6 +98,22 @@ Example response:
 ]
 ```
 
+## Packing approach and assumptions
+
+- Package and box dimensions use the same units; packages may be rotated.
+- Multiple packages can share a box when they fit in the remaining space and the
+  combined weight stays within the box's `maxWeight`.
+- Package IDs must be unique. Requests must contain 1 to 1000 packages, with
+  positive finite dimensions and weight.
+- A package that cannot fit any available box is rejected with a `422`
+  `unpackable_packages` response. Empty or invalid requests also receive `422`.
+- The packer orders packages by size and tries small-box-first and
+  large-box-first strategies. It chooses the better result of those attempts;
+  this is a heuristic and is not guaranteed to find the globally minimal count.
+
+With more time, I would expand the packing heuristic and test it against a
+broader set of generated package combinations.
+
 ## Project layout
 
 ```text
@@ -100,6 +127,9 @@ app/
     box_service.py  Box lookup and package packing
     boxes.py        In-code box catalogue
     packing.py      Package fitting and box assignment
+tests/
+  test_api.py       Endpoint and validation tests
+  test_packing.py   Packing algorithm tests
 requirements.txt
 README.md
 ```
